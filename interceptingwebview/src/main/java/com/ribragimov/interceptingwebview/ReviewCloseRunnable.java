@@ -4,10 +4,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 
-/**
- * Created by ribragimov on 4/16/18.
- */
-public class ReviewCloseRunnable implements Runnable {
+class ReviewCloseRunnable implements Runnable {
 
     private InterceptingWebView mWebView;
     private Handler mHandler;

@@ -1,10 +1,13 @@
 package com.ribragimov.interceptingwebview;
 
 /**
- * Created by ribragimov on 4/16/18.
+ * This interface is a callback when user clicks {close} button on Google eReview
  */
 public interface OnReviewCloseListener {
 
+    /**
+     * This method is fired when user clicks
+     */
     void onClose();
 
 }

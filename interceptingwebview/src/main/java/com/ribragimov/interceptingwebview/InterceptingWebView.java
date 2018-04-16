@@ -13,7 +13,7 @@ import android.webkit.WebView;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Created by ribragimov on 4/16/18.
+ * A {@linkplain WebView webview} that intercepts requests and able to do some magic
  */
 public class InterceptingWebView extends WebView {
 
@@ -66,13 +66,22 @@ public class InterceptingWebView extends WebView {
     }
 
 
+    /**
+     * This method should be executed in onDestroy method in Fragments and Activities.
+     * Otherwise, there will be memory leak.
+     */
     public void onDestroy() {
         mHandler.removeCallbacks(mReviewFitScreenRunnable);
         mHandler.removeCallbacks(mReviewCloseRunnable);
     }
 
 
-
+    /**
+     * This method intercepts all requests from web page.
+     * It should be executed in onPageFinished of WebViewClient. It can be executed multiple times.
+     *
+     * @param onInterceptListener listener for intercepts
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void setOnInterceptListener(OnInterceptListener onInterceptListener) {
         this.mOnInterceptListener = onInterceptListener;
@@ -99,7 +108,10 @@ public class InterceptingWebView extends WebView {
                 "})(XMLHttpRequest.prototype.send);", null);
     }
 
-
+    /**
+     * This method should be executed to make Google eReview full screen
+     * @param url url of a current page
+     */
     public void reviewFitScreen(String url) {
         if (url == null) {
             throw new NullPointerException("url cannot be null");
@@ -113,6 +125,12 @@ public class InterceptingWebView extends WebView {
     }
 
 
+    /**
+     * This method sets callback when user clicks {close} button in Google eReview
+     *
+     * @param url url of a current page
+     * @param onReviewCloseClickedListener callback to be fired
+     */
     public void setOnReviewCloseClickedListener(String url, OnReviewCloseListener onReviewCloseClickedListener) {
         if (url == null) {
             throw new NullPointerException("url cannot be null");
