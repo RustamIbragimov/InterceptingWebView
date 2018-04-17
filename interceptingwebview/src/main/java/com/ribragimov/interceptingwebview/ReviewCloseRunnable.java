@@ -23,7 +23,7 @@ class ReviewCloseRunnable implements Runnable {
                 "    var elems = document.getElementsByClassName(\"review-action-button-container cancel-button\");\n" +
                 "    if (elems && elems.length >= 2) { \n" +
                 "        elems[1].onclick = function () {\n" +
-                "            if (InterceptInterface.hasOwnPropery(\"onReviewClose\")) {\n" +
+                "            if (InterceptInterface.hasOwnProperty(\"onReviewClose\")) {\n" +
                 "                InterceptInterface.onReviewClose();\n" +
                 "            }\n" +
                 "        }\n" +

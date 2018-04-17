@@ -11,6 +11,7 @@ import android.webkit.WebViewClient;
 import com.ribragimov.interceptingwebview.InterceptingWebView;
 import com.ribragimov.interceptingwebview.OnInterceptListener;
 import com.ribragimov.interceptingwebview.OnReviewCloseListener;
+import com.ribragimov.interceptingwebview.OnReviewInstallAppRequiredListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClose() {
                         Log.i(TAG, "Review closed");
+                    }
+                });
+                mWebView.setOnReviewInstallAppRequiredListener(url, new OnReviewInstallAppRequiredListener() {
+                    @Override
+                    public void onReviewInstallAppRequired() {
+                        Log.i(TAG, "Review install app required");
                     }
                 });
             }

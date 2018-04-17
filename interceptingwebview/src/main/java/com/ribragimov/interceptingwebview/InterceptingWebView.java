@@ -19,15 +19,18 @@ public class InterceptingWebView extends WebView {
 
     private OnInterceptListener mOnInterceptListener;
     private OnReviewCloseListener mOnReviewCloseListener;
+    private OnReviewInstallAppRequiredListener mOnReviewInstallAppRequiredListener;
 
     private AtomicBoolean mIsStartedIntercepting;
     private AtomicBoolean mIsFailedIntercepting;
+    private AtomicBoolean mIsInstallAppRequired;
     private Handler mHandler;
 
     private final String EREVIEW_LINK = "https://play.google.com/store/ereview?docId=";
 
     private Runnable mReviewFitScreenRunnable;
     private Runnable mReviewCloseRunnable;
+    private Runnable mReviewInstallAppRequiredRunnable;
 
     private final int REPEAT_TIMEOUT = 2_000;
 
@@ -59,10 +62,12 @@ public class InterceptingWebView extends WebView {
 
         mIsStartedIntercepting = new AtomicBoolean(false);
         mIsFailedIntercepting = new AtomicBoolean(false);
+        mIsInstallAppRequired = new AtomicBoolean(false);
         mHandler = new Handler();
 
         mReviewFitScreenRunnable = new ReviewFitScreenRunnable(this, mHandler, REPEAT_TIMEOUT);
         mReviewCloseRunnable = new ReviewCloseRunnable(this, mHandler, REPEAT_TIMEOUT);
+        mReviewInstallAppRequiredRunnable = new ReviewInstallAppRequiredRunnable(this, mHandler, REPEAT_TIMEOUT);
     }
 
 
@@ -73,6 +78,7 @@ public class InterceptingWebView extends WebView {
     public void onDestroy() {
         mHandler.removeCallbacks(mReviewFitScreenRunnable);
         mHandler.removeCallbacks(mReviewCloseRunnable);
+        mHandler.removeCallbacks(mReviewInstallAppRequiredRunnable);
     }
 
 
@@ -110,6 +116,7 @@ public class InterceptingWebView extends WebView {
 
     /**
      * This method should be executed to make Google eReview full screen
+     *
      * @param url url of a current page
      */
     public void reviewFitScreen(String url) {
@@ -128,10 +135,11 @@ public class InterceptingWebView extends WebView {
     /**
      * This method sets callback when user clicks {close} button in Google eReview
      *
-     * @param url url of a current page
+     * @param url                          url of a current page
      * @param onReviewCloseClickedListener callback to be fired
      */
-    public void setOnReviewCloseClickedListener(String url, OnReviewCloseListener onReviewCloseClickedListener) {
+    public void setOnReviewCloseClickedListener(String url,
+                                                OnReviewCloseListener onReviewCloseClickedListener) {
         if (url == null) {
             throw new NullPointerException("url cannot be null");
         }
@@ -143,6 +151,28 @@ public class InterceptingWebView extends WebView {
             return;
         }
         mHandler.postDelayed(mReviewCloseRunnable, REPEAT_TIMEOUT);
+    }
+
+
+    /**
+     * This methods sets a callback when install app before proceeding is showed
+     *
+     * @param url                                url of a current page
+     * @param onReviewInstallAppRequiredListener callback to be fired
+     */
+    public void setOnReviewInstallAppRequiredListener(String url,
+                                                      OnReviewInstallAppRequiredListener onReviewInstallAppRequiredListener) {
+        if (url == null) {
+            throw new NullPointerException("url cannot be null");
+        }
+
+        this.mOnReviewInstallAppRequiredListener = onReviewInstallAppRequiredListener;
+
+        mHandler.removeCallbacks(mReviewInstallAppRequiredRunnable);
+        if (!url.contains(EREVIEW_LINK)) {
+            return;
+        }
+        mHandler.postDelayed(mReviewInstallAppRequiredRunnable, REPEAT_TIMEOUT);
     }
 
 
@@ -166,6 +196,16 @@ public class InterceptingWebView extends WebView {
         public void onReviewClose() {
             if (mOnReviewCloseListener != null) {
                 mOnReviewCloseListener.onClose();
+            }
+        }
+
+        @JavascriptInterface
+        public void onReviewInstallAppRequired() {
+            if (mOnReviewInstallAppRequiredListener != null) {
+                if (!mIsInstallAppRequired.get()) {
+                    mIsInstallAppRequired.set(true);
+                    mOnReviewInstallAppRequiredListener.onReviewInstallAppRequired();
+                }
             }
         }
     }
