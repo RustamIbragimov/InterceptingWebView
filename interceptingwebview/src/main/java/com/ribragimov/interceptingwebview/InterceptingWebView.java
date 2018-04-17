@@ -6,6 +6,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -175,6 +177,33 @@ public class InterceptingWebView extends WebView {
         mHandler.postDelayed(mReviewInstallAppRequiredRunnable, REPEAT_TIMEOUT);
     }
 
+
+    /**
+     * This method clears cookies
+     */
+    public void clearCookies() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        } else {
+            CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(getContext());
+            cookieSyncMngr.startSync();
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.removeAllCookie();
+            cookieManager.removeSessionCookie();
+            cookieSyncMngr.stopSync();
+            cookieSyncMngr.sync();
+        }
+    }
+
+    /**
+     * This method clears cache, history and cookies
+     */
+    public void clearAll() {
+        clearCache(true);
+        clearHistory();
+        clearCookies();
+    }
 
     class InterceptInterface {
         @JavascriptInterface
