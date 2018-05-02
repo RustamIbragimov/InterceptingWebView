@@ -1,16 +1,18 @@
-package com.ribragimov.interceptingwebview;
+package com.ribragimov.interceptingwebview.runnables;
 
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 
-class ReviewCloseRunnable implements Runnable {
+import com.ribragimov.interceptingwebview.webview.InterceptingWebView;
+
+public class ReviewCloseRunnable implements Runnable {
 
     private InterceptingWebView mWebView;
     private Handler mHandler;
     private int mTimeout;
 
-    ReviewCloseRunnable(InterceptingWebView webView, Handler handler, int timeout) {
+    public ReviewCloseRunnable(InterceptingWebView webView, Handler handler, int timeout) {
         this.mWebView = webView;
         this.mHandler = handler;
         this.mTimeout = timeout;

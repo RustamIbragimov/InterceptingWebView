@@ -1,4 +1,4 @@
-package com.ribragimov.interceptingwebview;
+package com.ribragimov.interceptingwebview.webview;
 
 /**
  * This interface is a callback when web view shows that you need to install app to proceed

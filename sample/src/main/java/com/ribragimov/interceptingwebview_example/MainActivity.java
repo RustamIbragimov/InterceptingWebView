@@ -8,10 +8,10 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.ribragimov.interceptingwebview.InterceptingWebView;
-import com.ribragimov.interceptingwebview.OnInterceptListener;
-import com.ribragimov.interceptingwebview.OnReviewCloseListener;
-import com.ribragimov.interceptingwebview.OnReviewInstallAppRequiredListener;
+import com.ribragimov.interceptingwebview.webview.InterceptingWebView;
+import com.ribragimov.interceptingwebview.webview.OnInterceptListener;
+import com.ribragimov.interceptingwebview.webview.OnReviewCloseListener;
+import com.ribragimov.interceptingwebview.webview.OnReviewInstallAppRequiredListener;
 
 public class MainActivity extends AppCompatActivity {
 

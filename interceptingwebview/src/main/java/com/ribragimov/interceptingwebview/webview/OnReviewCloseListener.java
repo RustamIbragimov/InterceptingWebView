@@ -1,4 +1,4 @@
-package com.ribragimov.interceptingwebview;
+package com.ribragimov.interceptingwebview.webview;
 
 /**
  * This interface is a callback when user clicks {close} button on Google eReview

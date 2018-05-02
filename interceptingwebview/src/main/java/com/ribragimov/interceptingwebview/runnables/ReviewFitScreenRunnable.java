@@ -1,16 +1,18 @@
-package com.ribragimov.interceptingwebview;
+package com.ribragimov.interceptingwebview.runnables;
 
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 
-class ReviewFitScreenRunnable implements Runnable {
+import com.ribragimov.interceptingwebview.webview.InterceptingWebView;
+
+public class ReviewFitScreenRunnable implements Runnable {
 
     private InterceptingWebView mWebView;
     private Handler mHandler;
     private int mTimeout;
 
-    ReviewFitScreenRunnable(InterceptingWebView webView, Handler handler, int timeout) {
+    public ReviewFitScreenRunnable(InterceptingWebView webView, Handler handler, int timeout) {
         this.mWebView = webView;
         this.mHandler = handler;
         this.mTimeout = timeout;

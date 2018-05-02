@@ -1,4 +1,4 @@
-package com.ribragimov.interceptingwebview;
+package com.ribragimov.interceptingwebview.webview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,6 +11,10 @@ import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+
+import com.ribragimov.interceptingwebview.runnables.ReviewCloseRunnable;
+import com.ribragimov.interceptingwebview.runnables.ReviewFitScreenRunnable;
+import com.ribragimov.interceptingwebview.runnables.ReviewInstallAppRequiredRunnable;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

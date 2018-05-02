@@ -1,8 +1,10 @@
-package com.ribragimov.interceptingwebview;
+package com.ribragimov.interceptingwebview.runnables;
 
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
+
+import com.ribragimov.interceptingwebview.webview.InterceptingWebView;
 
 /**
  * Created by ribragimov on 4/17/18.
@@ -14,7 +16,7 @@ public class ReviewInstallAppRequiredRunnable implements Runnable {
     private Handler mHandler;
     private int mTimeout;
 
-    ReviewInstallAppRequiredRunnable(InterceptingWebView webView, Handler handler, int timeout) {
+    public ReviewInstallAppRequiredRunnable(InterceptingWebView webView, Handler handler, int timeout) {
         this.mWebView = webView;
         this.mHandler = handler;
         this.mTimeout = timeout;
