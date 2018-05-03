@@ -24,7 +24,7 @@ dependencies {
 ## XML
 
 ```xml
-<com.ribragimov.interceptingwebview.InterceptingWebView
+<com.ribragimov.interceptingwebview.webview.InterceptingWebView
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
 ```
@@ -73,3 +73,25 @@ mWebView.setOnReviewCloseClickedListener(url, new OnReviewCloseListener() {
     }
 });
 ```
+
+## Parsing
+
+### Review
+```java
+ReviewParser.parse(packageName, url, responseBody)
+```
+
+Returns null if url does not match. Happens often because Google uses lots
+of redirects.
+
+Returns `ReviewParsedData` if everything is parsed.
+
+### Reaction
+```java
+ReactionParser.parse(url, requestBody)
+```
+
+Returns null if url does not match. Happens often because Google uses lots
+of redirects.
+
+Returns `ReactionParsedData` if everything is parsed.

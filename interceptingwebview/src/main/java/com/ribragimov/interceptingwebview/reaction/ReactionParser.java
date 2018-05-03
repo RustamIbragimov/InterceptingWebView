@@ -1,5 +1,7 @@
 package com.ribragimov.interceptingwebview.reaction;
 
+import android.support.annotation.Nullable;
+
 import com.ribragimov.interceptingwebview.ParseException;
 
 import org.json.JSONArray;
@@ -22,6 +24,7 @@ public class ReactionParser {
      * @return object which contains all data
      * @throws ParseException exception when parsing
      */
+    @Nullable
     public static ReactionParsedData parse(String url, String requestBody) throws ParseException {
         if (!url.contains("play.google.com/_/PlayStoreUi/mutate")) {
             return null;

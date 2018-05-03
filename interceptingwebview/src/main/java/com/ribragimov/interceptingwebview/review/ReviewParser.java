@@ -1,5 +1,7 @@
 package com.ribragimov.interceptingwebview.review;
 
+import android.support.annotation.Nullable;
+
 import com.ribragimov.interceptingwebview.ParseException;
 
 import org.json.JSONArray;
@@ -18,6 +20,7 @@ public class ReviewParser {
      * @return object which contains all data
      * @throws ParseException exception when parsing
      */
+    @Nullable
     public static ReviewParsedData parse(String packageName, String url, String responseBody) throws ParseException {
         if (!url.contains("submitreview")) {
             return null;
