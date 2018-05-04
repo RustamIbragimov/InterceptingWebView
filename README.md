@@ -62,7 +62,7 @@ mWebView.setOnInterceptListener(new OnInterceptListener() {
 });
 ```
 
-#### Add this methods to Review screen
+#### Add these methods to Review screen
 
 ```java
 mWebView.reviewFitScreen(url);
