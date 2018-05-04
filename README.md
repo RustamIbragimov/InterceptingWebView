@@ -95,3 +95,16 @@ Returns null if url does not match. Happens often because Google uses lots
 of redirects.
 
 Returns `ReactionParsedData` if everything is parsed.
+
+### Url
+
+```java
+UrlGenerator.getReviewUrl(packageName)
+```
+Returns review url for this package name
+
+```java
+UrlGenerator.getReactionUrl(reviewLink)
+```
+Return reaction url for this review link
+

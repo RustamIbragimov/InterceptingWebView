@@ -58,6 +58,8 @@ public class ReactionParser {
         String[] params = str.split("&");
         for (String param : params) {
             String[] splitted = param.split("=");
+            if (splitted.length < 2) continue;
+
             map.put(splitted[0], splitted[1]);
         }
 

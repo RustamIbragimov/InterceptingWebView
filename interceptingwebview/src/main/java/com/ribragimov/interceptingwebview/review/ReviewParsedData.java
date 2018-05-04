@@ -68,4 +68,8 @@ public class ReviewParsedData {
     public void setLink(String link) {
         this.link = link;
     }
+
+    public boolean isFiveStars() {
+        return rating != null && rating.equals("5");
+    }
 }

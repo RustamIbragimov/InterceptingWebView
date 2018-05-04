@@ -52,4 +52,31 @@ public class ReviewParser {
         }
     }
 
+    /**
+     * This method checks whether the given text contains required words
+     * @param text text to check
+     * @param requiredPhrase required phrase
+     * @return whether the given text contains required words
+     */
+    public static boolean textContainsRequiredPhrase(String text, String requiredPhrase) {
+        requiredPhrase = requiredPhrase.toLowerCase();
+        text = text.toLowerCase();
+
+        int startIndex = text.indexOf(requiredPhrase);
+        if (startIndex == -1) {
+            return false;
+        }
+
+        int lastIndex = startIndex + requiredPhrase.length() - 1;
+
+        // s != 0
+        // s - 1 is char
+        if (startIndex != 0 && Character.isLetter(text.charAt(startIndex - 1))) {
+            return false;
+        }
+
+        // l = length
+        // l + 1 is not char
+        return lastIndex == text.length() - 1 || !Character.isLetter(text.charAt(lastIndex + 1));
+    }
 }
