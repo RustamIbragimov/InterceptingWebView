@@ -27,7 +27,6 @@ public class InterceptingWebView extends WebView {
     private OnReviewCloseListener mOnReviewCloseListener;
     private OnReviewInstallAppRequiredListener mOnReviewInstallAppRequiredListener;
 
-    private AtomicBoolean mIsStartedIntercepting;
     private AtomicBoolean mIsFailedIntercepting;
     private AtomicBoolean mIsInstallAppRequired;
     private Handler mHandler;
@@ -66,7 +65,6 @@ public class InterceptingWebView extends WebView {
         getSettings().setJavaScriptEnabled(true);
         setWebChromeClient(new WebChromeClient());
 
-        mIsStartedIntercepting = new AtomicBoolean(false);
         mIsFailedIntercepting = new AtomicBoolean(false);
         mIsInstallAppRequired = new AtomicBoolean(false);
         mHandler = new Handler();
@@ -97,13 +95,9 @@ public class InterceptingWebView extends WebView {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void setOnInterceptListener(OnInterceptListener onInterceptListener) {
         this.mOnInterceptListener = onInterceptListener;
-
-        if (mIsStartedIntercepting.get()) {
-            return;
-        }
-
-        mIsStartedIntercepting.set(true);
         evaluateJavascript("(function (send) {\n" +
+                "    if (XMLHttpRequest.prototype.isAdded) return;\n" +
+                "\n" +
                 "    XMLHttpRequest.prototype.send = function (body) {\n" +
                 "        var oldready = this.onreadystatechange;\n" +
                 "        this.onreadystatechange = function () {\n" +
@@ -114,9 +108,10 @@ public class InterceptingWebView extends WebView {
                 "            }\n" +
                 "            return oldready.apply(this);\n" +
                 "        }\n" +
-                "\n" +
                 "        send.call(this, body);\n" +
                 "    }\n" +
+                "\n" +
+                "    XMLHttpRequest.prototype.isAdded = true;\n" +
                 "})(XMLHttpRequest.prototype.send);", null);
     }
 
