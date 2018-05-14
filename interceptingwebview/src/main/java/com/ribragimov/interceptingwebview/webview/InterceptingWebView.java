@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.webkit.CookieManager;
@@ -67,7 +68,7 @@ public class InterceptingWebView extends WebView {
 
         mIsFailedIntercepting = new AtomicBoolean(false);
         mIsInstallAppRequired = new AtomicBoolean(false);
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
 
         mReviewFitScreenRunnable = new ReviewFitScreenRunnable(this, mHandler, REPEAT_TIMEOUT);
         mReviewCloseRunnable = new ReviewCloseRunnable(this, mHandler, REPEAT_TIMEOUT);
@@ -206,15 +207,25 @@ public class InterceptingWebView extends WebView {
 
     class InterceptInterface {
         @JavascriptInterface
-        public void onInterceptRequest(String url, String request, String response) {
+        public void onInterceptRequest(final String url, final String request, final String response) {
             if (mIsFailedIntercepting.get()) return;
 
             if (mOnInterceptListener != null) {
                 if (url.equalsIgnoreCase("undefined")) {
                     mIsFailedIntercepting.set(true);
-                    mOnInterceptListener.onInterceptFailed();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mOnInterceptListener.onInterceptFailed();
+                        }
+                    });
                 } else {
-                    mOnInterceptListener.onInterceptRequest(url, request, response);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mOnInterceptListener.onInterceptRequest(url, request, response);
+                        }
+                    });
                 }
             }
         }
@@ -223,7 +234,12 @@ public class InterceptingWebView extends WebView {
         @JavascriptInterface
         public void onReviewClose() {
             if (mOnReviewCloseListener != null) {
-                mOnReviewCloseListener.onClose();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mOnReviewCloseListener.onClose();
+                    }
+                });
             }
         }
 
@@ -232,7 +248,12 @@ public class InterceptingWebView extends WebView {
             if (mOnReviewInstallAppRequiredListener != null) {
                 if (!mIsInstallAppRequired.get()) {
                     mIsInstallAppRequired.set(true);
-                    mOnReviewInstallAppRequiredListener.onReviewInstallAppRequired();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mOnReviewInstallAppRequiredListener.onReviewInstallAppRequired();
+                        }
+                    });
                 }
             }
         }
