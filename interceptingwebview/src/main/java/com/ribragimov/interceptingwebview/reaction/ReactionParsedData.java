@@ -5,6 +5,11 @@ package com.ribragimov.interceptingwebview.reaction;
  */
 public class ReactionParsedData {
 
+    public final static String TYPE_LIKE = "like";
+    public final static String TYPE_DISLIKE = "dislike";
+    public final static String TYPE_SPAM = "spam";
+
+
     private String id;
     private int type;
 
@@ -24,11 +29,11 @@ public class ReactionParsedData {
     public String getType() {
         switch (type) {
             case 1:
-                return "like";
+                return TYPE_LIKE;
             case 2:
-                return "dislike";
+                return TYPE_DISLIKE;
             case 3:
-                return "spam";
+                return TYPE_SPAM;
             default:
                 return "";
         }

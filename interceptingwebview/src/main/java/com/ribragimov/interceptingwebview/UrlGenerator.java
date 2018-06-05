@@ -21,4 +21,10 @@ public class UrlGenerator {
                 "&flowName=GlifWebSignIn&flowEntry=ServiceLogin";
     }
 
+
+    public static String getMultipleReactionUrl(String packageName) {
+        String url = "https://play.google.com/store/apps/details?id=" + packageName;
+        return getReactionUrl(url);
+    }
+
 }
