@@ -17,18 +17,21 @@ public class MultipleReactionParser {
     private Set<String> mDislikeIds;
     private Set<String> mSpamIds;
 
+    private Set<String> mBadLikeIds;
+
     public MultipleReactionParser(ReactionRateParser reactionRateParser) {
         this.mReactionRateParser = reactionRateParser;
 
         mLikeIds = new HashSet<>();
         mDislikeIds = new HashSet<>();
         mSpamIds = new HashSet<>();
+        mBadLikeIds = new HashSet<>();
     }
 
     /**
      * This method parses the request and updates reaction sets
      *
-     * @param url url
+     * @param url         url
      * @param requestBody request body
      * @throws ParseException exception when parsing
      */
@@ -44,10 +47,14 @@ public class MultipleReactionParser {
 
         if (parsedData.getType().equals(ReactionParsedData.TYPE_LIKE)) {
             if (rate != 5) {
+                mBadLikeIds.add(id);
                 throw new IllegalReactionLikeRateException(rate);
             } else {
                 mLikeIds.add(id);
             }
+        } else if (parsedData.getType().equals(ReactionParsedData.TYPE_DISLIKE)
+                || parsedData.getType().equals(ReactionParsedData.TYPE_SPAM)) {
+            mBadLikeIds.remove(id);
         }
     }
 
@@ -75,12 +82,23 @@ public class MultipleReactionParser {
         return mSpamIds.size();
     }
 
+    public Set<String> getBadLikeIds() {
+        return mBadLikeIds;
+    }
+
+
+    public int getBadLikeCount() {
+        return mBadLikeIds.size();
+    }
+
     @Override
     public String toString() {
         return "MultipleReactionParser{" +
-                "mLikeIds=" + mLikeIds +
+                "mReactionRateParser=" + mReactionRateParser +
+                ", mLikeIds=" + mLikeIds +
                 ", mDislikeIds=" + mDislikeIds +
                 ", mSpamIds=" + mSpamIds +
+                ", mBadLikeIds=" + mBadLikeIds +
                 '}';
     }
 }
