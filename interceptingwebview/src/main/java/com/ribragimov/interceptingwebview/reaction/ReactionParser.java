@@ -2,7 +2,7 @@ package com.ribragimov.interceptingwebview.reaction;
 
 import android.support.annotation.Nullable;
 
-import com.ribragimov.interceptingwebview.ParseException;
+import com.ribragimov.interceptingwebview.exceptions.ParseException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

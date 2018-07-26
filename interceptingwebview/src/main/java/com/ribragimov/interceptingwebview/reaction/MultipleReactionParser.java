@@ -1,6 +1,7 @@
 package com.ribragimov.interceptingwebview.reaction;
 
-import com.ribragimov.interceptingwebview.ParseException;
+import com.ribragimov.interceptingwebview.exceptions.IllegalReactionLikeRateException;
+import com.ribragimov.interceptingwebview.exceptions.ParseException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,11 +11,15 @@ import java.util.Set;
  */
 public class MultipleReactionParser {
 
+    private ReactionRateParser mReactionRateParser;
+
     private Set<String> mLikeIds;
     private Set<String> mDislikeIds;
     private Set<String> mSpamIds;
 
-    public MultipleReactionParser() {
+    public MultipleReactionParser(ReactionRateParser reactionRateParser) {
+        this.mReactionRateParser = reactionRateParser;
+
         mLikeIds = new HashSet<>();
         mDislikeIds = new HashSet<>();
         mSpamIds = new HashSet<>();
@@ -27,29 +32,24 @@ public class MultipleReactionParser {
      * @param requestBody request body
      * @throws ParseException exception when parsing
      */
-    public void parse(String url, String requestBody) throws ParseException {
+    public void parseLikes(String url, String requestBody) throws ParseException, IllegalReactionLikeRateException {
         ReactionParsedData parsedData = ReactionParser.parse(url, requestBody);
         if (parsedData == null) return;
 
         String id = parsedData.getId();
 
         mLikeIds.remove(id);
-        mDislikeIds.remove(id);
-        mSpamIds.remove(id);
 
-        switch (parsedData.getType()) {
-            case ReactionParsedData.TYPE_LIKE:
+        int rate = mReactionRateParser.getRate(id);
+
+        if (parsedData.getType().equals(ReactionParsedData.TYPE_LIKE)) {
+            if (rate != 5) {
+                throw new IllegalReactionLikeRateException(rate);
+            } else {
                 mLikeIds.add(id);
-                break;
-            case ReactionParsedData.TYPE_DISLIKE:
-                mDislikeIds.add(id);
-                break;
-            case ReactionParsedData.TYPE_SPAM:
-                mSpamIds.add(id);
-                break;
+            }
         }
     }
-
 
     public Set<String> getLikeIds() {
         return mLikeIds;
@@ -73,5 +73,14 @@ public class MultipleReactionParser {
 
     public int getSpamCount() {
         return mSpamIds.size();
+    }
+
+    @Override
+    public String toString() {
+        return "MultipleReactionParser{" +
+                "mLikeIds=" + mLikeIds +
+                ", mDislikeIds=" + mDislikeIds +
+                ", mSpamIds=" + mSpamIds +
+                '}';
     }
 }

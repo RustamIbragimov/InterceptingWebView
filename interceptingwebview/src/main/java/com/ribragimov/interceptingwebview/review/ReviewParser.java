@@ -2,7 +2,7 @@ package com.ribragimov.interceptingwebview.review;
 
 import android.support.annotation.Nullable;
 
-import com.ribragimov.interceptingwebview.ParseException;
+import com.ribragimov.interceptingwebview.exceptions.ParseException;
 
 import org.json.JSONArray;
 

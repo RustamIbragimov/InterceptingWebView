@@ -13,6 +13,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
+import com.ribragimov.interceptingwebview.reaction.ReactionRateParser;
 import com.ribragimov.interceptingwebview.runnables.ReviewCloseRunnable;
 import com.ribragimov.interceptingwebview.runnables.ReviewFitScreenRunnable;
 import com.ribragimov.interceptingwebview.runnables.ReviewInstallAppRequiredRunnable;
@@ -27,6 +28,8 @@ public class InterceptingWebView extends WebView {
     private OnInterceptListener mOnInterceptListener;
     private OnReviewCloseListener mOnReviewCloseListener;
     private OnReviewInstallAppRequiredListener mOnReviewInstallAppRequiredListener;
+
+    private ReactionRateParser mReactionRateParser;
 
     private AtomicBoolean mIsFailedIntercepting;
     private AtomicBoolean mIsInstallAppRequired;
@@ -205,6 +208,26 @@ public class InterceptingWebView extends WebView {
         clearCookies();
     }
 
+    /**
+     * This method sets a reaction rate parser to this webview
+     *
+     * @param reactionRateParser rate parser for reaction
+     */
+    public void setReactionRateParser(ReactionRateParser reactionRateParser) {
+        this.mReactionRateParser = reactionRateParser;
+    }
+
+
+    /**
+     * This method requests html content from webview
+     */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void requestHtml() {
+        evaluateJavascript("InterceptInterface.onHtmlReady" +
+                "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');", null);
+    }
+
+
     class InterceptInterface {
         @JavascriptInterface
         public void onInterceptRequest(final String url, final String request, final String response) {
@@ -255,6 +278,13 @@ public class InterceptingWebView extends WebView {
                         }
                     });
                 }
+            }
+        }
+
+        @JavascriptInterface
+        public void onHtmlReady(String html) {
+            if (mReactionRateParser != null) {
+                mReactionRateParser.setHtml(html);
             }
         }
     }

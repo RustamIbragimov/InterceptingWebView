@@ -8,6 +8,11 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.ribragimov.interceptingwebview.exceptions.IllegalReactionLikeRateException;
+import com.ribragimov.interceptingwebview.exceptions.ParseException;
+import com.ribragimov.interceptingwebview.UrlGenerator;
+import com.ribragimov.interceptingwebview.reaction.MultipleReactionParser;
+import com.ribragimov.interceptingwebview.reaction.ReactionRateParser;
 import com.ribragimov.interceptingwebview.webview.InterceptingWebView;
 import com.ribragimov.interceptingwebview.webview.OnInterceptListener;
 import com.ribragimov.interceptingwebview.webview.OnReviewCloseListener;
@@ -24,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mWebView = findViewById(R.id.webview);
-        initWebView();
+        initReactionMulti();
     }
 
 
-    private void initWebView() {
+    private void initReview() {
         mWebView.loadUrl("https://play.google.com/store/ereview?docId=editor.video.motion.fast.slow");
 
         mWebView.setWebViewClient(new WebViewClient() {
@@ -61,6 +66,43 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onReviewInstallAppRequired() {
                         Log.i(TAG, "Review install app required");
+                    }
+                });
+            }
+        });
+    }
+
+
+
+    private void initReactionMulti() {
+        mWebView.loadUrl(UrlGenerator.getReactionUrl("https://play.google.com/store/apps/details?id=park.ramadan.app"));
+
+        final ReactionRateParser rateParser = new ReactionRateParser();
+        final MultipleReactionParser parser = new MultipleReactionParser(rateParser);
+
+        mWebView.setReactionRateParser(rateParser);
+        mWebView.setWebViewClient(new WebViewClient() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+
+
+                mWebView.requestHtml();
+                mWebView.setOnInterceptListener(new OnInterceptListener() {
+                    @Override
+                    public void onInterceptRequest(String url, String requestBody, String responseBody) {
+                        try {
+                            parser.parseLikes(url, requestBody);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        } catch (IllegalReactionLikeRateException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onInterceptFailed() {
                     }
                 });
             }

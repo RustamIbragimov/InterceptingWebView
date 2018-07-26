@@ -1,4 +1,4 @@
-package com.ribragimov.interceptingwebview;
+package com.ribragimov.interceptingwebview.exceptions;
 
 /**
  * Created by ribragimov on 5/2/18.
