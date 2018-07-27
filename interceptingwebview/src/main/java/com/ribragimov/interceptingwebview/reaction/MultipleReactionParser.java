@@ -45,9 +45,9 @@ public class MultipleReactionParser {
 
         mLikeIds.remove(id);
 
-        int rate = mReactionRateParser.getRate(id);
-
         if (parsedData.getType().equals(ReactionParsedData.TYPE_LIKE)) {
+            int rate = mReactionRateParser.getRate(id);
+
             if (rate != 5) {
                 mBadLikeIds.add(id);
                 throw new IllegalReactionLikeRateException(rate);

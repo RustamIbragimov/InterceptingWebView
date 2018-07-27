@@ -229,11 +229,13 @@ public class InterceptingWebView extends WebView {
 
 
     class InterceptInterface {
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @JavascriptInterface
         public void onInterceptRequest(final String url, final String request, final String response) {
             if (mIsFailedIntercepting.get()) return;
 
             if (mOnInterceptListener != null) {
+                requestHtml();
                 if (url.equalsIgnoreCase("undefined")) {
                     mIsFailedIntercepting.set(true);
                     mHandler.post(new Runnable() {
