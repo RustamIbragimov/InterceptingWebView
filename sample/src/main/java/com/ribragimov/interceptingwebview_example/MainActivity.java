@@ -96,15 +96,15 @@ public class MainActivity extends AppCompatActivity {
                             boolean isReaction = parser.parseLikes(url, requestBody);
                             if (isReaction) {
                                 if (parser.getBadLikeCount() > 0) {
-                                    // show dialog
+                                    System.out.println("Remove bad likes");
                                 } else {
-                                    // update count
+                                    System.out.println(parser.getLikeIds());
                                 }
                             }
                         } catch (ParseException e) {
                             e.printStackTrace();
                         } catch (IllegalReactionLikeRateException e) {
-                            e.printStackTrace();
+                            System.out.println("Remove bad likes");
                         }
                     }
 

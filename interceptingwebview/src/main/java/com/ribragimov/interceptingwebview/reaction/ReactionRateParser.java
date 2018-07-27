@@ -8,14 +8,29 @@ public class ReactionRateParser {
     private final int MAX_STEP_COUNT = 1000;
 
     private String html;
+    private StringBuilder downloadedData;
+
+
+    public ReactionRateParser() {
+        downloadedData = new StringBuilder();
+    }
 
     /**
-     * This method sets html content for futher parsign
+     * This method sets html content for further parsing
      *
      * @param html html content
      */
     public void setHtml(String html) {
         this.html = html;
+    }
+
+    /**
+     * This method adds additional content to html content
+     *
+     * @param data additional data
+     */
+    public void appendDownloadedData(String data) {
+        downloadedData.append(data);
     }
 
     /**
@@ -30,6 +45,8 @@ public class ReactionRateParser {
      */
     public int getRate(String reviewId) {
         if (html == null || html.isEmpty()) return -1;
+
+        html = downloadedData.toString() + html;
 
         int idx = html.indexOf(reviewId);
         if (idx == -1) {

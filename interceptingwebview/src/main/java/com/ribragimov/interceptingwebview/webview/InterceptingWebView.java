@@ -229,13 +229,11 @@ public class InterceptingWebView extends WebView {
 
 
     class InterceptInterface {
-        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @JavascriptInterface
         public void onInterceptRequest(final String url, final String request, final String response) {
             if (mIsFailedIntercepting.get()) return;
 
             if (mOnInterceptListener != null) {
-                requestHtml();
                 if (url.equalsIgnoreCase("undefined")) {
                     mIsFailedIntercepting.set(true);
                     mHandler.post(new Runnable() {
@@ -248,6 +246,9 @@ public class InterceptingWebView extends WebView {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            if (mReactionRateParser != null && url.contains("_/PlayStoreUi/data")) {
+                                mReactionRateParser.appendDownloadedData(response);
+                            }
                             mOnInterceptListener.onInterceptRequest(url, request, response);
                         }
                     });
