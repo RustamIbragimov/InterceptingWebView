@@ -93,7 +93,14 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onInterceptRequest(String url, String requestBody, String responseBody) {
                         try {
-                            parser.parseLikes(url, requestBody);
+                            boolean isReaction = parser.parseLikes(url, requestBody);
+                            if (isReaction) {
+                                if (parser.getBadLikeCount() > 0) {
+                                    // show dialog
+                                } else {
+                                    // update count
+                                }
+                            }
                         } catch (ParseException e) {
                             e.printStackTrace();
                         } catch (IllegalReactionLikeRateException e) {
