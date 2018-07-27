@@ -34,10 +34,12 @@ public class MultipleReactionParser {
      * @param url         url
      * @param requestBody request body
      * @throws ParseException exception when parsing
+     * @throws IllegalReactionLikeRateException exception if it is like and rate is not 5
+     * @return whether this request is reaction
      */
-    public void parseLikes(String url, String requestBody) throws ParseException, IllegalReactionLikeRateException {
+    public boolean parseLikes(String url, String requestBody) throws ParseException, IllegalReactionLikeRateException {
         ReactionParsedData parsedData = ReactionParser.parse(url, requestBody);
-        if (parsedData == null) return;
+        if (parsedData == null) return false;
 
         String id = parsedData.getId();
 
@@ -56,6 +58,8 @@ public class MultipleReactionParser {
                 || parsedData.getType().equals(ReactionParsedData.TYPE_SPAM)) {
             mBadLikeIds.remove(id);
         }
+
+        return true;
     }
 
     public Set<String> getLikeIds() {
