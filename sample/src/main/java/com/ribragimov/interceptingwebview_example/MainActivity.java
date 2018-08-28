@@ -13,6 +13,8 @@ import com.ribragimov.interceptingwebview.exceptions.ParseException;
 import com.ribragimov.interceptingwebview.UrlGenerator;
 import com.ribragimov.interceptingwebview.reaction.MultipleReactionParser;
 import com.ribragimov.interceptingwebview.reaction.ReactionRateParser;
+import com.ribragimov.interceptingwebview.review.ReviewParsedData;
+import com.ribragimov.interceptingwebview.review.ReviewParser;
 import com.ribragimov.interceptingwebview.webview.InterceptingWebView;
 import com.ribragimov.interceptingwebview.webview.OnInterceptListener;
 import com.ribragimov.interceptingwebview.webview.OnReviewCloseListener;
@@ -29,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mWebView = findViewById(R.id.webview);
-        initReactionMulti();
+//        initReactionMulti();
+        initReview();
     }
 
 
@@ -45,8 +48,12 @@ public class MainActivity extends AppCompatActivity {
                 mWebView.setOnInterceptListener(new OnInterceptListener() {
                     @Override
                     public void onInterceptRequest(String url, String requestBody, String responseBody) {
-                        Log.i(TAG, "url: " + url + ", request: "
-                                + requestBody + ", response: " + responseBody);
+                        try {
+                            ReviewParsedData parse = ReviewParser.parse("editor.video.motion.fast.slow", url, responseBody);
+                            System.out.println(parse);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -75,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initReactionMulti() {
-        mWebView.loadUrl(UrlGenerator.getReactionUrl("https://play.google.com/store/apps/details?id=park.ramadan.app"));
+        mWebView.loadUrl(UrlGenerator.getReactionUrl("https://play.google.com/store/apps/details?id=editor.video.motion.fast.slow&showAllReviews=true"));
 
         final ReactionRateParser rateParser = new ReactionRateParser();
         final MultipleReactionParser parser = new MultipleReactionParser(rateParser);

@@ -72,4 +72,16 @@ public class ReviewParsedData {
     public boolean isFiveStars() {
         return rating != null && rating.equals("5");
     }
+
+    @Override
+    public String toString() {
+        return "ReviewParsedData{" +
+                "id='" + id + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", name='" + name + '\'' +
+                ", rating='" + rating + '\'' +
+                ", text='" + text + '\'' +
+                ", link='" + link + '\'' +
+                '}';
+    }
 }

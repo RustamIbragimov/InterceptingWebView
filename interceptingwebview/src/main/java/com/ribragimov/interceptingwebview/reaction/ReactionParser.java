@@ -19,14 +19,18 @@ public class ReactionParser {
     /**
      * This method parses reaction request. Ideally, it should be executed on background thread.
      *
-     * @param url url
+     * @param url         url
      * @param requestBody request body
      * @return object which contains all data
      * @throws ParseException exception when parsing
      */
     @Nullable
     public static ReactionParsedData parse(String url, String requestBody) throws ParseException {
-        if (!url.contains("play.google.com/_/PlayStoreUi/mutate")) {
+        if (!url.contains("play.google.com/_/PlayStoreUi/data/batchexecute")) {
+            return null;
+        }
+
+        if (!requestBody.contains("gp%3A")) {
             return null;
         }
 
@@ -34,13 +38,8 @@ public class ReactionParser {
             Map<String, String> params = parseFormData(requestBody);
             String data = URLDecoder.decode(params.get("f.req"));
 
-            JSONArray array = new JSONArray(data);
-            JSONArray dataArray = array.getJSONArray(1).getJSONArray(0);
-            int objectId = dataArray.getInt(1);
-            JSONArray objectArray = dataArray.getJSONArray(2);
-            JSONObject dataObject = objectArray.getJSONObject(0);
-            JSONArray mainArray = dataObject.getJSONArray(String.valueOf(objectId));
-            JSONArray innerArray = mainArray.getJSONArray(0);
+            String innerString = new JSONArray(data).getJSONArray(0).getJSONArray(0).getString(1);
+            JSONArray innerArray = new JSONArray(innerString).getJSONArray(0);
 
             String id = innerArray.getString(2);
             int reaction = innerArray.getInt(3);

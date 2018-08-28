@@ -36,9 +36,9 @@ public class ReactionRateParser {
     /**
      * This method parses html and returns rate based on review id
      * Note, that this method returns:
-     *  -1 -> when html is not set
-     *  -2 -> when review id is not found in html content
-     *  -3 -> when step count is exceeded max amount of steps
+     * -1 -> when html is not set
+     * -2 -> when review id is not found in html content
+     * -3 -> when step count is exceeded max amount of steps
      *
      * @param reviewId review id
      * @return rate
@@ -58,17 +58,12 @@ public class ReactionRateParser {
 
         int closingBracketsLeft = 3;
         int stepCount = 0;
-        boolean isInsideString = false;
 
         while (true) {
             if (html.length() - 1 < idx) return -4;
 
-            if (html.charAt(idx) == '\"') { // invert isInsideString
-                isInsideString = !isInsideString;
-            } else if (html.charAt(idx) == ']') { // decrement closingBracketsLeft when \]\ char is not inside the string
-                if (!isInsideString) {
-                    closingBracketsLeft--;
-                }
+            if (html.charAt(idx) == ']') { // decrement closingBracketsLeft when \]\ char is not inside the string
+                closingBracketsLeft--;
             } else if (closingBracketsLeft == 0 && Character.isDigit(html.charAt(idx))) { // we found rate, cool
                 return html.charAt(idx) - '0';
             }
